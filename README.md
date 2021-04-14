@@ -1,0 +1,1 @@
+# Objective: create an external digikam service that applies object detection and translate objects into digikam tags

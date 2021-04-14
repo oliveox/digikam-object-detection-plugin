@@ -1,0 +1,12 @@
+#CUSTOM
+
+/venv
+.env
+notes.txt
+/models
+/db
+
+/.vscode
+/media
+
+__pycache__/
