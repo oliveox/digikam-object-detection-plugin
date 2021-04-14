@@ -1,5 +1,4 @@
 from adapters import digikam
-from services import object_detection
 from adapters import db
 from services import utils
 
@@ -7,30 +6,36 @@ import os
 
 if __name__ == "__main__":
     tags_root_pid = digikam.DigiKamAdapter.insert_tag(0, "objects")
-    all_entities_to_analyse = utils.Utils.get_entities_to_analyse()
-    all_detected_objects = []
+    not_yet_analyzed_entities = utils.Utils.get_not_analyzed_entities()
 
     # detect all objects
-    for row in all_entities_to_analyse:
+    for row in not_yet_analyzed_entities:
         row_id = row[0]
+        
         row_path = row[1]
-
         counter = 0
         for c in row_path:
             if c == "/":
                 counter+=1
             else:
                 break
-
         file_path = os.path.join("/digikam/album",row[1][counter:])
+
         file_hash = row[2]
 
         # TODO catch errors 
         try:
+
+            # this import initializes Tensorflow, takes a lot of time, thats why its here
+            from services import object_detection
+
             objects = object_detection.ObjectDetector.get_object_in_image(file_path)
 
             # save to internal db
-            id = db.InternalDB.insert_image_objects((row_id, file_hash, ' '.join(objects)))
+            id = db.InternalDB.insert_image_objects(row_id, file_hash, objects)
+
+            print("################################")
+            print("Inserted {file_path} in database!".format(file_path=file_path))
 
             if len(objects) > 0:
                 for obj in objects:
@@ -47,11 +52,14 @@ if __name__ == "__main__":
 
                 digikam.DigiKamAdapter.close_db_connection()
 
-            print("################################")
-            print("Inserted in database!")
-            print("Image path: {}".format(file_path))
-            print('Objects: {}'.format(', '.join(objects)))
-            print("################################")
+                print("File path: {}".format(file_path))
+                print('Objects: {}'.format(', '.join(objects)))
+            
+            else:
+                print("Invalid file or couldn't detect any objects. Skipping it ... ")
         except Exception as err:
             print("Error on analysing filepath: {}".format(file_path))
             print("Error message: {}".format(err))
+        finally:
+            print("################################")
+        

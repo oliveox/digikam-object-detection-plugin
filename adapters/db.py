@@ -7,12 +7,12 @@ class InternalDB():
         return sqlite3.connect('/db/plugin.db'); 
 
     @classmethod
-    def insert_image_objects(cls, image_object_data):
+    def insert_image_objects(cls, row_id, file_hash, objects):
         con = cls.get_db_connection()
 
         cur = con.cursor()
         cur.execute('''insert into ImageObjects (external_id, hash, objects)
-            values (?, ?, ?)''', image_object_data)
+            values (?, ?, ?)''', (row_id, file_hash, ' '.join(objects)))
 
         con.commit()
         con.close()

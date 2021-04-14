@@ -4,7 +4,7 @@ from adapters import db
 class Utils:
 
     @classmethod
-    def get_entities_to_analyse(cls):
+    def get_not_analyzed_entities(cls):
         
         # get all internal db external image ids
         all_external_ids = db.InternalDB.get_all_external_ids()
@@ -16,9 +16,9 @@ class Utils:
         to_analyse_entity_ids = list(set(all_image_ids) - set(all_external_ids))
 
         # get entities to be analyzed
-        to_analyse_entities = digikam.DigiKamAdapter.get_imported_entities_with_specific_ids(to_analyse_entity_ids)
+        not_analyzed_entities = digikam.DigiKamAdapter.get_imported_entities_with_specific_ids(to_analyse_entity_ids)
 
-        return to_analyse_entities
+        return not_analyzed_entities
 
 if __name__ == "__main__":
-    result = Utils.get_entities_to_analyse()
+    result = Utils.get_not_analyzed_entities()
