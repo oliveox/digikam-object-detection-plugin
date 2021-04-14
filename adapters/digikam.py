@@ -23,10 +23,20 @@ class DigiKamAdapter:
     def get_all_imported_entities(cls):
         con = cls.get_db_connection()
         cur = con.cursor()
-        result = cur.execute(DigiKamAdapter.get_all_imported_entities_query).fetchall()
+        result = cur.execute(cls.get_all_imported_entities_query).fetchall()
 
-        # con.commit()
-        # con.close()
+        cls.close_db_connection()
+
+        return result
+
+    @classmethod
+    def get_imported_entities_with_specific_ids(cls, ids):
+        con = cls.get_db_connection()
+        cur = con.cursor()
+
+        result = cur.execute(cls.get_imported_entities_with_specific_ids_query(len(ids)), ids).fetchall()
+
+        cls.close_db_connection()
 
         return result
 
@@ -36,12 +46,11 @@ class DigiKamAdapter:
         cur = con.cursor()
 
         try:
-            result = cur.execute(DigiKamAdapter.insert_tag_query, (parent_id, tag_name)).fetchone()[0]
+            result = cur.execute(cls.insert_tag_query, (parent_id, tag_name)).fetchone()[0]
         except Exception as err:
-            result = cur.execute(DigiKamAdapter.get_tag_query, (parent_id, tag_name)).fetchone()[0]
+            result = cur.execute(cls.get_tag_query, (parent_id, tag_name)).fetchone()[0]
 
-        # con.commit()
-        # con.close()
+        cls.close_db_connection()
 
         return result
 
@@ -51,13 +60,43 @@ class DigiKamAdapter:
         con = cls.get_db_connection()
         cur = con.cursor()
 
-        result = cur.execute(DigiKamAdapter.insert_image_tag_query, (image_id, tag_id))
+        result = cur.execute(cls.insert_image_tag_query, (image_id, tag_id))
 
-        # con.commit()
-        # con.close()
+        cls.close_db_connection()
 
         return result
+    
+    @classmethod
+    def get_all_image_ids(cls):
+        con = cls.get_db_connection()
+        cur = con.cursor()
 
+        # TODO - execute all queries in separated method isolated with try / catch for any execute
+        raw_all_image_ids = cur.execute(cls.get_all_image_ids_query).fetchall()
+        formated_all_image_ids = map(lambda x: x[0], raw_all_image_ids)
+
+        cls.close_db_connection()
+
+        return formated_all_image_ids
+
+    # status = 1 means in Digikam that file exists, not deleted
+    def get_imported_entities_with_specific_ids_query(args_length):
+        
+        query = """
+            select i.id, a.relativePath || "/" || i.name as fullPath, i.uniqueHash from
+            (
+            select * from Images
+            where id in ({seq}) and status = 1
+            ) i
+            join Albums a
+            on a.id = i.album
+            """.format(seq=", ".join(["?"]*args_length))
+        
+        return query
+
+    get_all_image_ids_query = """
+        select id from Images
+    """
 
     get_all_imported_entities_query = """select i.id, a.relativePath || "/" || i.name as fullPath, i.uniqueHash from Images i
         join Albums a
@@ -80,7 +119,7 @@ class DigiKamAdapter:
         """
 
 if __name__ == "__main__":
-    result = DigiKamAdapter.get_all_imported_entities()
+    result = DigiKamAdapter.get_imported_entities_with_specific_ids([13,14,15, 16, 17, 18])
 
     for row in result:
         print(row)

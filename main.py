@@ -1,15 +1,17 @@
 from adapters import digikam
 from services import object_detection
 from adapters import db
+from services import utils
+
 import os
 
 if __name__ == "__main__":
     tags_root_pid = digikam.DigiKamAdapter.insert_tag(0, "objects")
-    all_entities = digikam.DigiKamAdapter.get_all_imported_entities()
+    all_entities_to_analyse = utils.Utils.get_entities_to_analyse()
     all_detected_objects = []
 
     # detect all objects
-    for row in all_entities:
+    for row in all_entities_to_analyse:
         row_id = row[0]
         row_path = row[1]
 
