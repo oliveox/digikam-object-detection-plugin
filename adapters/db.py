@@ -1,10 +1,23 @@
 import sqlite3
+import traceback
 
 class InternalDB():
 
+    con = None
+
     @classmethod
     def get_db_connection(cls):
-        return sqlite3.connect('/db/plugin.db'); 
+        if cls.con == None:
+            cls.con = sqlite3.connect('/db/plugin.db'); 
+
+        return cls.con
+
+    @classmethod
+    def close_db_connection(cls):
+        cls.con.commit()
+        cls.con.close()
+
+        cls.con = None
 
     @classmethod
     def insert_image_objects(cls, row_id, file_hash, objects):
@@ -14,8 +27,7 @@ class InternalDB():
         cur.execute('''insert into ImageObjects (external_id, hash, objects)
             values (?, ?, ?)''', (row_id, file_hash, ' '.join(objects)))
 
-        con.commit()
-        con.close()
+        cls.close_db_connection()
 
         return cur.lastrowid
 
@@ -27,8 +39,7 @@ class InternalDB():
         cur.execute("""CREATE TABLE ImageObjects
             (id integer primary key, external_id integer, hash text, objects text)""")
 
-        con.commit()
-        con.close()
+        cls.close_db_connection()
     
     @classmethod
     def get_all_external_ids(cls):
@@ -38,8 +49,7 @@ class InternalDB():
         raw_all_external_ids = cur.execute(cls.get_all_external_ids_query).fetchall()
         formated_external_ids = map(lambda x: x[0], raw_all_external_ids)
 
-        con.commit()
-        con.close()
+        cls.close_db_connection()
 
         return formated_external_ids
 
@@ -53,6 +63,6 @@ if __name__ == "__main__":
     try:
         InternalDB.initialise_database()    
     except sqlite3.OperationalError as err:
-        print("Error: {}".format(err))
+        traceback.print_exc()
 
     print(InternalDB.insert_image_objects(data))

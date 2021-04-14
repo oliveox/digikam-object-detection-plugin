@@ -1,4 +1,6 @@
 import sqlite3
+from sqlite3.dbapi2 import IntegrityError
+import traceback
 
 class DigiKamAdapter:
 
@@ -45,10 +47,13 @@ class DigiKamAdapter:
         con = cls.get_db_connection()
         cur = con.cursor()
 
+        result = -1
         try:
             result = cur.execute(cls.insert_tag_query, (parent_id, tag_name)).fetchone()[0]
-        except Exception as err:
+        except IntegrityError:
             result = cur.execute(cls.get_tag_query, (parent_id, tag_name)).fetchone()[0]
+        except Exception:
+            traceback.print_exc()
 
         cls.close_db_connection()
 
@@ -60,7 +65,13 @@ class DigiKamAdapter:
         con = cls.get_db_connection()
         cur = con.cursor()
 
-        result = cur.execute(cls.insert_image_tag_query, (image_id, tag_id))
+        result = -1
+        try:
+            result = cur.execute(cls.insert_image_tag_query, (image_id, tag_id))
+        except sqlite3.IntegrityError:
+            pass
+        except Exception:
+            traceback.print_exc()
 
         cls.close_db_connection()
 

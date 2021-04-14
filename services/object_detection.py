@@ -1,5 +1,7 @@
-from imageai.Detection import ObjectDetection
 import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # allow only error / fatal errors from tensorflow
+
+from imageai.Detection import ObjectDetection
 import filetype
 
 executionPath = os.getcwd()
@@ -21,7 +23,7 @@ class ObjectDetector:
 
 
     @classmethod
-    def get_object_in_image(cls, file_path):
+    def get_objects_in_image(cls, file_path):
 
         if cls.is_valid_file(file_path):
             if ObjectDetector.image_detector == None:
@@ -50,5 +52,5 @@ class ObjectDetector:
         return detector
 
 if __name__ == "__main__":
-    objects = ObjectDetector.get_object_in_image("/digikam/album/a.jpg")
+    objects = ObjectDetector.get_objects_in_image("/digikam/album/a.jpg")
     print('{}'.format(', '.join(objects)))
