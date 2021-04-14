@@ -1,1 +1,5 @@
-# Objective: create an external digikam service that applies object detection and translate objects into digikam tags
+### Still in development
+not stable
+
+### Objective:
+ create an external digikam service that applies object detection and translate objects into digikam tags
