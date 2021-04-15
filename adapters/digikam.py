@@ -7,6 +7,23 @@ class DigiKamAdapter:
     con = None
 
     @classmethod
+    def execute_query(cls, query, data = None, get_last_row_id = False):
+        
+        try:
+            con = cls.get_db_connection()
+            cur = con.cursor()
+            result = cur.execute(query) if data == None else cur.execute(query, data)
+
+            if get_last_row_id:
+                return result.lastrowid
+
+            return result.fetchall()
+        except:
+            raise
+        finally:
+            cls.close_db_connection()   
+
+    @classmethod
     def get_db_connection(cls):
         if cls.con == None:
             cls.con = sqlite3.connect('/digikam/db/digikam4.db')
@@ -23,72 +40,62 @@ class DigiKamAdapter:
 
     @classmethod
     def get_all_imported_entities(cls):
-        con = cls.get_db_connection()
-        cur = con.cursor()
-        result = cur.execute(cls.get_all_imported_entities_query).fetchall()
-
-        cls.close_db_connection()
-
-        return result
+        try:
+            result = cls.execute_query(cls.get_all_imported_entities_query)
+            return result
+        except:
+            traceback.print_exc()
+            raise
 
     @classmethod
     def get_imported_entities_with_specific_ids(cls, ids):
-        con = cls.get_db_connection()
-        cur = con.cursor()
-
-        result = cur.execute(cls.get_imported_entities_with_specific_ids_query(len(ids)), ids).fetchall()
-
-        cls.close_db_connection()
+        result = -1
+        try:
+            result = cls.execute_query(cls.get_imported_entities_with_specific_ids_query(len(ids)), ids)
+        except Exception:
+            traceback.print_exc()
+            raise
 
         return result
 
     @classmethod
     def insert_tag(cls, parent_id, tag_name):
-        con = cls.get_db_connection()
-        cur = con.cursor()
-
         result = -1
         try:
-            result = cur.execute(cls.insert_tag_query, (parent_id, tag_name)).fetchone()[0]
+            result = cls.execute_query(cls.insert_tag_query, (parent_id, tag_name), get_last_row_id = True)
         except IntegrityError:
-            result = cur.execute(cls.get_tag_query, (parent_id, tag_name)).fetchone()[0]
+            result = cls.execute_query(cls.get_tag_query, (parent_id, tag_name))[0][0]
         except Exception:
             traceback.print_exc()
-
-        cls.close_db_connection()
+            raise
 
         return result
 
 
     @classmethod
     def insert_image_tag(cls, image_id, tag_id):
-        con = cls.get_db_connection()
-        cur = con.cursor()
-
         result = -1
         try:
-            result = cur.execute(cls.insert_image_tag_query, (image_id, tag_id))
+            result = cls.execute_query(cls.insert_image_tag_query, (image_id, tag_id))
         except sqlite3.IntegrityError:
             pass
         except Exception:
             traceback.print_exc()
-
-        cls.close_db_connection()
+            raise
 
         return result
     
     @classmethod
     def get_all_image_ids(cls):
-        con = cls.get_db_connection()
-        cur = con.cursor()
+        try:
+            # TODO - execute all queries in separated method isolated with try / catch for any execute
+            raw_all_image_ids = cls.execute_query(cls.get_all_image_ids_query)
+            formated_all_image_ids = list(map(lambda x: x[0], raw_all_image_ids))
 
-        # TODO - execute all queries in separated method isolated with try / catch for any execute
-        raw_all_image_ids = cur.execute(cls.get_all_image_ids_query).fetchall()
-        formated_all_image_ids = map(lambda x: x[0], raw_all_image_ids)
-
-        cls.close_db_connection()
-
-        return formated_all_image_ids
+            return formated_all_image_ids
+        except:
+            traceback.print_exc()
+            raise
 
     # status = 1 means in Digikam that file exists, not deleted
     def get_imported_entities_with_specific_ids_query(args_length):
@@ -130,8 +137,10 @@ class DigiKamAdapter:
         """
 
 if __name__ == "__main__":
-    result = DigiKamAdapter.get_imported_entities_with_specific_ids([13,14,15, 16, 17, 18])
+    # result = DigiKamAdapter.get_imported_entities_with_specific_ids([13,14,15, 16, 17, 18])
+    result = DigiKamAdapter.insert_tag(0, "test1234")
 
     for row in result:
         print(row)
             
+
