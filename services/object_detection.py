@@ -1,8 +1,8 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # allow only error / fatal errors from tensorflow
+import filetype
 
 from imageai.Detection import ObjectDetection
-import filetype
 
 executionPath = os.getcwd()
 

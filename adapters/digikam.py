@@ -1,6 +1,8 @@
 import sqlite3
-from sqlite3.dbapi2 import IntegrityError
 import traceback
+from sqlite3.dbapi2 import IntegrityError
+
+from config import DIGIKAM_DB_PATH
 
 class DigiKamAdapter:
 
@@ -26,7 +28,7 @@ class DigiKamAdapter:
     @classmethod
     def get_db_connection(cls):
         if cls.con == None:
-            cls.con = sqlite3.connect('/digikam/db/digikam4.db')
+            cls.con = sqlite3.connect(DIGIKAM_DB_PATH)
         
         return cls.con
 
@@ -88,7 +90,6 @@ class DigiKamAdapter:
     @classmethod
     def get_all_image_ids(cls):
         try:
-            # TODO - execute all queries in separated method isolated with try / catch for any execute
             raw_all_image_ids = cls.execute_query(cls.get_all_image_ids_query)
             formated_all_image_ids = list(map(lambda x: x[0], raw_all_image_ids))
 

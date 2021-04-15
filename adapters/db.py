@@ -43,14 +43,6 @@ class InternalDB():
             raise
 
         return result
-
-    @classmethod
-    def initialise_database(cls):
-        try:
-            cls.execute_query(cls.create_image_objects_table)
-        except:
-            traceback.print_exc()
-            raise
     
     @classmethod
     def get_all_external_ids(cls):
@@ -62,6 +54,17 @@ class InternalDB():
             traceback.print_exc()
             raise
 
+    @classmethod
+    def initialise_internal_db(cls):
+
+        # create ImageObjects table
+        try:
+            cls.execute_query(cls.create_image_objects_table)
+        except:
+            traceback.print_exc()
+            raise
+
+
     get_all_external_ids_query = """
         select DISTINCT external_id from ImageObjects
     """
@@ -72,8 +75,8 @@ class InternalDB():
     """
 
     create_image_objects_table = """
-            CREATE TABLE ImageObjects
-            (id integer primary key, external_id integer, hash text, objects text)
+            CREATE TABLE IF NOT EXISTS ImageObjects
+            (id integer PRIMARY KEY, external_id integer UNIQUE, hash text, objects text)
     """
 
 
