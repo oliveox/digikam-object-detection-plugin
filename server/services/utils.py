@@ -2,7 +2,7 @@ import os
 import traceback
 
 from adapters import db, digikam
-from config import DIGIKAM_ALBUM_FOLDER, DIGIKAM_DB_PATH
+from config import DIGIKAM_ALBUM_FOLDER, DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE
 
 
 class Utils:
@@ -30,8 +30,11 @@ class Utils:
         not_yet_analyzed_entities = cls.get_not_analyzed_entities()
 
         if len(not_yet_analyzed_entities) > 0:
+            REDIS_INSTANCE.set(REDIS_TOTAL_TO_ANALYSE, "{}".format(len(not_yet_analyzed_entities)))
+
             # detect all objects
-            for row in not_yet_analyzed_entities:
+            for index, row in enumerate(not_yet_analyzed_entities):
+                REDIS_INSTANCE.set(REDIS_ANALYSED_COUNT, "{}".format(index))
                 row_id = row[0]
                 
                 row_path = row[1]
@@ -84,6 +87,8 @@ class Utils:
                     print("################################")
         else:
             print("All Digikam imported entities are already analyzed")
+        
+        return 0
 
 if __name__ == "__main__":
     result = Utils.get_not_analyzed_entities()

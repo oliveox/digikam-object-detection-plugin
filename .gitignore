@@ -1,12 +1,39 @@
 #CUSTOM
 
-/venv
+**/venv
 .env
 notes.txt
-/models
-/db
+**/models/*
+**/db
 
+**/media/*
 /.vscode
-/media
 
 __pycache__/
+
+*.h5
+
+### react ###
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+**/build
+
+**/node_modules
+bower_components
+
+**/package-lock.json
+/ui/package-lock.json
+
+### vscode ###
+**/.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# redis
+*.rdb

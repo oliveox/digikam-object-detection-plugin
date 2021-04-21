@@ -1,7 +1,13 @@
 ## TODO
 - logging to file and console
-- start analysis API
+- start analysis API    
+    - loading bar - incremental update
+    - bidirectional communication using websockets
 - support for multiple Digikam root albums
+- ML efficiency analysis: export somewhere the pics but with border around  detected objects
+- restart Digikam after object analysis
+- create db class models
+- stop polling after analysis done
 
 ## DONE
 - create config file (removed hardcoded vars)
@@ -11,3 +17,9 @@
 - skip entities that were already analysed
 - put inside ImageObjects unsupported files too
 - shut up the tensorflow init logs
+
+- if analysis is already running, don't retrigger it at a new api call 
+        - ignore any other api calls
+        - disable trigger button
+- button to trigger the analysis
+- analysis process status polling
