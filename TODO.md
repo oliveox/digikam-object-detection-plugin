@@ -7,6 +7,8 @@
 - ML efficiency analysis: export somewhere the pics but with border around  detected objects
 - restart Digikam after object analysis
 - create db class models
+- run it externally 
+- reconnect UI afte refresh to to server status
 
 ## DONE
 - stop polling after analysis done

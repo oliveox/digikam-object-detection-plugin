@@ -8,7 +8,7 @@ from flask_executor import Executor
 
 from adapters import db
 from services import utils
-from config import REDIS_ANALYSED_COUNT, REDIS_TOTAL_TO_ANALYSE, REDIS_INSTANCE
+from config import REDIS_ANALYSED_COUNT, REDIS_ANALYSIS_MESSAGE, REDIS_TOTAL_TO_ANALYSE, REDIS_INSTANCE
 
 app = Flask(__name__)
 app.config["EXECUTOR_TYPE"] = "process"
@@ -38,6 +38,7 @@ def index():
 @app.route('/get-result')
 def get_result():
 
+    message = REDIS_INSTANCE.get(REDIS_ANALYSIS_MESSAGE)
     if len(executor.futures._futures) > 0 \
         and not executor.futures.done(OBJECT_DETECTION_PROCESS_KEY):
         # TODO - verify if any futures have been submitted
@@ -47,11 +48,13 @@ def get_result():
         return json_response({
             "status": executor.futures._state(OBJECT_DETECTION_PROCESS_KEY),
             "total_to_analyse": total_to_analyse,
-            "analysed": analysed
+            "analysed": analysed,
+            "message": message
         })
     
     return json_response({
-        "status": "DONE"
+        "status": "DONE",
+        "message": message
     })
 
 def initialise_server():                                                                

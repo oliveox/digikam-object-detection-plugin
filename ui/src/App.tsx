@@ -8,6 +8,7 @@ interface AnalysisData {
   isAnalysing: boolean;
   totalToAnalyse: number;
   alreadyAnalysed: number;
+  message: string;
 }
 
 const App = (): ReactElement => {
@@ -16,6 +17,7 @@ const App = (): ReactElement => {
 
   const [analysisData, setAnalysisData] = useState<AnalysisData>({
     isAnalysing: false,
+    message: "",
     totalToAnalyse: 0,
     alreadyAnalysed: 0
   });
@@ -28,13 +30,15 @@ const App = (): ReactElement => {
       clearInterval(polling);
       setAnalysisData({
         ...analysisData,
-        isAnalysing: false
+        isAnalysing: false,
+        message: response.data.message
       })
     } else {
       setAnalysisData({
         isAnalysing: true,
         totalToAnalyse: parseInt(response.data.total_to_analyse),
-        alreadyAnalysed: parseInt(response.data.analysed)
+        alreadyAnalysed: parseInt(response.data.analysed),
+        message: response.data.message
       })
     }
   }
@@ -50,15 +54,6 @@ const App = (): ReactElement => {
     } catch(err) {
       console.error(err);
     }
-  }
-
-  const analysisView = (status: any) => {
-    return (
-      <div>
-          <h1>Status</h1>
-          <div>{status}</div>
-      </div>
-    )
   }
 
   const button = (disabled: boolean) => {
@@ -91,20 +86,15 @@ const App = (): ReactElement => {
   }
 
   let disabled;
-  let status;
   if (analysisData.isAnalysing) {
     disabled = true;
-    status = "Analysing ... ";
   } else {
     disabled = false;
-    status = "Not analysing ... ";
   }
 
   return (
     <div>
-      {
-        analysisView(status)
-      }
+      <div>Status: {analysisData.message}</div>
       {
         button(disabled)
       }

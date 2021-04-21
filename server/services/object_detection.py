@@ -1,6 +1,7 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # allow only error / fatal errors from tensorflow
 import filetype
+from config import REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
 
 from imageai.Detection import ObjectDetection
 
@@ -27,7 +28,10 @@ class ObjectDetector:
 
         if cls.is_valid_file(file_path):
             if ObjectDetector.image_detector == None:
+                
                 print("Initialising object detector ... ")
+                REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Initialising object detector ... ")
+
                 ObjectDetector.image_detector = ObjectDetector.initialise_image_detector()
 
             detections = ObjectDetector.image_detector.detectObjectsFromImage(

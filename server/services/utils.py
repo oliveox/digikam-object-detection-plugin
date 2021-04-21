@@ -2,7 +2,7 @@ import os
 import traceback
 
 from adapters import db, digikam
-from config import DIGIKAM_ALBUM_FOLDER, DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE
+from config import DIGIKAM_ALBUM_FOLDER, DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
 
 
 class Utils:
@@ -27,14 +27,20 @@ class Utils:
     @classmethod
     def analyze_entities(cls):
         tags_root_pid = digikam.DigiKamAdapter.insert_tag(0, "objects")
+
+        REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Fetching not yet analysed entities")
         not_yet_analyzed_entities = cls.get_not_analyzed_entities()
 
         if len(not_yet_analyzed_entities) > 0:
             REDIS_INSTANCE.set(REDIS_TOTAL_TO_ANALYSE, "{}".format(len(not_yet_analyzed_entities)))
 
+            # this import initializes Tensorflow, takes a lot of time, thats why its here
+            from services import object_detection
+
             # detect all objects
             for index, row in enumerate(not_yet_analyzed_entities):
                 REDIS_INSTANCE.set(REDIS_ANALYSED_COUNT, "{}".format(index))
+
                 row_id = row[0]
                 
                 row_path = row[1]
@@ -45,12 +51,11 @@ class Utils:
                     else:
                         break
                 file_path = os.path.join(DIGIKAM_ALBUM_FOLDER,row[1][counter:])
+                REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Analysing file: {}".format(file_path))
 
                 file_hash = row[2]
 
                 try:
-                    # this import initializes Tensorflow, takes a lot of time, thats why its here
-                    from services import object_detection
                     objects = object_detection.ObjectDetector.get_objects_in_image(file_path)
 
                     # save to internal db
@@ -85,9 +90,12 @@ class Utils:
                     traceback.print_exc()
                 finally:
                     print("################################")
+
+            REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Analysis ended")
         else:
             print("All Digikam imported entities are already analyzed")
-        
+            REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "All Digikam imported entities are already analyzed")
+
         return 0
 
 if __name__ == "__main__":
