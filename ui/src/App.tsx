@@ -12,7 +12,7 @@ interface AnalysisData {
 
 const App = (): ReactElement => {
 
-  let polling = undefined;
+  let polling: any = undefined;
 
   const [analysisData, setAnalysisData] = useState<AnalysisData>({
     isAnalysing: false,
@@ -24,8 +24,8 @@ const App = (): ReactElement => {
     const apiUrl = "http://127.0.0.1:5000/get-result";
     const response: any = await axios.get(apiUrl);
 
-    if (response.data.status == "DONE") {
-      polling = null;
+    if (response.data.status === "DONE") {
+      clearInterval(polling);
       setAnalysisData({
         ...analysisData,
         isAnalysing: false
@@ -43,11 +43,6 @@ const App = (): ReactElement => {
     const apiUrl = "http://127.0.0.1:5000/start-analysis";
     try {
       const reponse = await axios.get(apiUrl);
-      console.log(reponse);
-      setAnalysisData({
-        ...analysisData,
-        isAnalysing: true
-      })
 
       // start polling
       polling = setInterval(() => pollAnalysisStatus(), 1000);

@@ -7,9 +7,9 @@
 - ML efficiency analysis: export somewhere the pics but with border around  detected objects
 - restart Digikam after object analysis
 - create db class models
-- stop polling after analysis done
 
 ## DONE
+- stop polling after analysis done
 - create config file (removed hardcoded vars)
 - unique constraints in internal db
 - print stacktrace
