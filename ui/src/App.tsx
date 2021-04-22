@@ -1,5 +1,5 @@
 import React, {ReactElement, useState} from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, Container, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import axios from 'axios'
@@ -62,11 +62,11 @@ const App = (): ReactElement => {
       <div>
         {disabled ? (
           <Button type="button" variant="primary" disabled onClick={triggerAnalysis}>
-              Analyze media files
+              Analyse files
           </Button>
         ): 
           <Button type="button" variant="primary" onClick={triggerAnalysis}>
-              Analyze media files
+              Analyse files
           </Button>
         }
       </div>
@@ -93,7 +93,7 @@ const App = (): ReactElement => {
   }
 
   return (
-    <div>
+    <Container>
       <div>Status: {analysisData.message}</div>
       {
         button(disabled)
@@ -104,7 +104,7 @@ const App = (): ReactElement => {
         :
         ""
       }
-    </div>
+    </Container>
   )
 }
 
