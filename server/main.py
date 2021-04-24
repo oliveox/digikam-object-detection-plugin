@@ -1,14 +1,17 @@
+import json
 import sys
 import traceback
+import os 
+
 import redis
-import json
 from flask import Flask
 from flask_cors import CORS
 from flask_executor import Executor
 
 from adapters import db
+from config import (REDIS_ANALYSED_COUNT, REDIS_ANALYSIS_MESSAGE,
+                     REDIS_INSTANCE, REDIS_TOTAL_TO_ANALYSE)
 from services import utils
-from config import REDIS_ANALYSED_COUNT, REDIS_ANALYSIS_MESSAGE, REDIS_TOTAL_TO_ANALYSE, REDIS_INSTANCE
 
 app = Flask(__name__)
 app.config["EXECUTOR_TYPE"] = "process"
@@ -21,7 +24,6 @@ OBJECT_DETECTION_PROCESS_KEY='object_detection'
 def close_executor(arg):
     executor.futures.pop(OBJECT_DETECTION_PROCESS_KEY)
 executor.add_default_done_callback(close_executor)
-
 
 
 @app.route('/start-analysis')
@@ -75,4 +77,4 @@ if __name__ == "__main__":
         initialise_server()
     except:
         traceback.print_exc()
-        sys.exit(1)    
+        sys.exit(1)

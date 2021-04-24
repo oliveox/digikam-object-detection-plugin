@@ -2,7 +2,7 @@ import os
 import traceback
 
 from adapters import db, digikam
-from config import DIGIKAM_ALBUM_FOLDER, DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
+from config import INTERNAL_DIGIKAM_ALBUM_FOLDER, INTERNAL_DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
 
 
 class Utils:
@@ -50,7 +50,7 @@ class Utils:
                         counter+=1
                     else:
                         break
-                file_path = os.path.join(DIGIKAM_ALBUM_FOLDER,row[1][counter:])
+                file_path = os.path.join(INTERNAL_DIGIKAM_ALBUM_FOLDER,row[1][counter:])
                 REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Analysing file: {}".format(file_path))
 
                 file_hash = row[2]

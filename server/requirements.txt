@@ -11,3 +11,5 @@ Flask==1.1.2
 flask_cors
 flask_executor
 redis
+filetype
+imageai

@@ -1,0 +1,4 @@
+FROM node:latest
+RUN apt-get update -y && apt-get upgrade -y
+
+CMD cd /app && npm install && npm start

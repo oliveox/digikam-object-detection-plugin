@@ -2,7 +2,7 @@ import sqlite3
 import traceback
 from sqlite3.dbapi2 import IntegrityError
 
-from config import DIGIKAM_DB_PATH
+from config import INTERNAL_DIGIKAM_DB_PATH
 
 class DigiKamAdapter:
 
@@ -28,9 +28,9 @@ class DigiKamAdapter:
     @classmethod
     def get_db_connection(cls):
         if cls.con == None:
-            cls.con = sqlite3.connect(DIGIKAM_DB_PATH)
+            cls.con = sqlite3.connect(INTERNAL_DIGIKAM_DB_PATH)
         
-        return cls.con
+        return cls.con`
 
     @classmethod
     def close_db_connection(cls):

@@ -24,9 +24,6 @@ logs
 **/node_modules
 bower_components
 
-**/package-lock.json
-/ui/package-lock.json
-
 ### vscode ###
 **/.vscode/*
 !.vscode/settings.json

@@ -1,0 +1,6 @@
+FROM tensorflow/tensorflow:2.4.0-gpu
+RUN apt-get update -y && apt-get upgrade -y && apt install -y libgl1-mesa-glx redis-server
+
+# start redis server
+CMD redis-server
+CMD cd /app && pip install -r requirements.txt && export FLASK_APP=main.py && flask run --host 0.0.0.0

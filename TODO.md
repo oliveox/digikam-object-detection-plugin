@@ -10,7 +10,11 @@
 - run it externally 
 - reconnect UI afte refresh to to server status
 
+
+
 ## DONE
+- dockerfile for UI and server
+- take config param values from env vars
 - stop polling after analysis done
 - create config file (removed hardcoded vars)
 - unique constraints in internal db

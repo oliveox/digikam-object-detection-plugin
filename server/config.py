@@ -1,6 +1,9 @@
+import os
+
 # docker container relative paths
-DIGIKAM_DB_PATH="/digikam/db/digikam4.db"
-DIGIKAM_ALBUM_FOLDER= "/digikam/album"
+
+INTERNAL_DIGIKAM_DB_PATH=os.getenv("INTERNAL_DIGIKAM_DB_PATH")
+INTERNAL_DIGIKAM_ALBUM_FOLDER=os.getenv("INTERNAL_DIGIKAM_ALBUM_FOLDER")
 
 REDIS_ANALYSED_COUNT="analysed_entities"
 REDIS_TOTAL_TO_ANALYSE="to_analyse_entities"
