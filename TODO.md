@@ -1,4 +1,6 @@
 ## TODO
+- verify environment variables validity
+- add types to Python code
 - logging to file and console
 - start analysis API    
     - loading bar - incremental update
