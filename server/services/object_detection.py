@@ -1,11 +1,6 @@
+import json
 import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # allow only error / fatal errors from tensorflow
 import filetype
-from config import REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
-
-from imageai.Detection import ObjectDetection
-
-executionPath = os.getcwd()
 
 class ObjectDetector:
 
@@ -24,37 +19,16 @@ class ObjectDetector:
 
 
     @classmethod
-    def get_objects_in_image(cls, file_path):
+    def get_objects_in_image(cls, model, file_path):
 
         if cls.is_valid_file(file_path):
-            if ObjectDetector.image_detector == None:
-                
-                print("Initialising object detector ... ")
-                REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Initialising object detector ... ")
+            results = model(file_path)            
 
-                ObjectDetector.image_detector = ObjectDetector.initialise_image_detector()
-
-            detections = ObjectDetector.image_detector.detectObjectsFromImage(
-                input_image=file_path, 
-                output_image_path=os.path.join(executionPath, "media", "result.jpg"), 
-                minimum_percentage_probability=30
-            )
+            if results is None:
+                print(f'Could not fetch objects for {file_path}')
+                return []
             
-            objects = list(map(lambda x: x["name"], detections))
-            return objects
+            json_data = json.loads(results.pandas().xyxy[0].to_json(orient="records"))
+            return list(set(map(lambda x: x["name"], json_data)))
         else:
             return []
-
-    @classmethod
-    def initialise_image_detector(cls):
-        detector = ObjectDetection()
-        detector.setModelTypeAsRetinaNet()
-        detector.setModelPath(os.path.join
-                (executionPath, "models", "resnet50_coco_best_v2.1.0.h5"))
-        detector.loadModel(detection_speed = "flash")
-
-        return detector
-
-if __name__ == "__main__":
-    objects = ObjectDetector.get_objects_in_image("/digikam/album/a.jpg")
-    print('{}'.format(', '.join(objects)))

@@ -30,7 +30,7 @@ class DigiKamAdapter:
         if cls.con == None:
             cls.con = sqlite3.connect(INTERNAL_DIGIKAM_DB_PATH)
         
-        return cls.con`
+        return cls.con
 
     @classmethod
     def close_db_connection(cls):

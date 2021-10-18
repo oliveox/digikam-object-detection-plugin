@@ -1,33 +1,15 @@
 ## TODO
+- linux / windows support
+- setup script
+    - create virtualenv
+    - automatically create plugin.db if it doesn't already exist
+    - download and pip install remote yolo requirments file
+- specify yolo version
+- select GPU / CPU processing
 - verify environment variables validity
 - add types to Python code
 - logging to file and console
-- start analysis API    
-    - loading bar - incremental update
-    - bidirectional communication using websockets
 - support for multiple Digikam root albums
 - ML efficiency analysis: export somewhere the pics but with border around  detected objects
 - restart Digikam after object analysis
 - create db class models
-- run it externally 
-- reconnect UI afte refresh to to server status
-
-
-
-## DONE
-- dockerfile for UI and server
-- take config param values from env vars
-- stop polling after analysis done
-- create config file (removed hardcoded vars)
-- unique constraints in internal db
-- print stacktrace
-- close digikam connecitons after using them
-- skip entities that were already analysed
-- put inside ImageObjects unsupported files too
-- shut up the tensorflow init logs
-
-- if analysis is already running, don't retrigger it at a new api call 
-        - ignore any other api calls
-        - disable trigger button
-- button to trigger the analysis
-- analysis process status polling

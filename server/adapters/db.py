@@ -1,6 +1,8 @@
 import sqlite3
 import traceback
 
+from config import PLUGIN_DB_PATH
+
 class InternalDB():
 
     con = None
@@ -22,7 +24,7 @@ class InternalDB():
     @classmethod
     def get_db_connection(cls):
         if cls.con == None:
-            cls.con = sqlite3.connect('/db/plugin.db'); 
+            cls.con = sqlite3.connect(PLUGIN_DB_PATH); 
 
         return cls.con
 

@@ -1,9 +1,10 @@
 import os
 import traceback
+import torch
 
 from adapters import db, digikam
-from config import INTERNAL_DIGIKAM_ALBUM_FOLDER, INTERNAL_DIGIKAM_DB_PATH, REDIS_TOTAL_TO_ANALYSE, REDIS_ANALYSED_COUNT, REDIS_INSTANCE, REDIS_ANALYSIS_MESSAGE
-
+from config import INTERNAL_DIGIKAM_ALBUM_FOLDER
+from services.object_detection import ObjectDetector
 
 class Utils:
 
@@ -28,73 +29,64 @@ class Utils:
     def analyze_entities(cls):
         tags_root_pid = digikam.DigiKamAdapter.insert_tag(0, "objects")
 
-        REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Fetching not yet analysed entities")
         not_yet_analyzed_entities = cls.get_not_analyzed_entities()
-
-        if len(not_yet_analyzed_entities) > 0:
-            REDIS_INSTANCE.set(REDIS_TOTAL_TO_ANALYSE, "{}".format(len(not_yet_analyzed_entities)))
-
-            # this import initializes Tensorflow, takes a lot of time, thats why its here
-            from services import object_detection
-
-            # detect all objects
-            for index, row in enumerate(not_yet_analyzed_entities):
-                REDIS_INSTANCE.set(REDIS_ANALYSED_COUNT, "{}".format(index))
-
-                row_id = row[0]
-                
-                row_path = row[1]
-                counter = 0
-                for c in row_path:
-                    if c == "/":
-                        counter+=1
-                    else:
-                        break
-                file_path = os.path.join(INTERNAL_DIGIKAM_ALBUM_FOLDER,row[1][counter:])
-                REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Analysing file: {}".format(file_path))
-
-                file_hash = row[2]
-
-                try:
-                    objects = object_detection.ObjectDetector.get_objects_in_image(file_path)
-
-                    # save to internal db
-                    id = db.InternalDB.insert_image_objects(row_id, file_hash, objects)
-
-                    print("################################")
-                    print("Inserted [{file_path}] in database!".format(file_path=file_path))
-
-                    if len(objects) > 0:
-                        # set because same objects may appear multiple times in the same image
-                        for obj in set(objects): 
-                            try:
-                                # create digikam tag
-                                tag_id = digikam.DigiKamAdapter.insert_tag(tags_root_pid, obj)
-
-                                # create association
-                                image_tag_id = digikam.DigiKamAdapter.insert_image_tag(row_id, tag_id)
-
-                            except Exception as err:    
-                                traceback.print_exc()
-
-                        digikam.DigiKamAdapter.close_db_connection()
-
-                        print("File path: [{}]".format(file_path))
-                        print('Objects: [{}]'.format(', '.join(objects)))
-                    
-                    else:
-                        print("Invalid file or couldn't detect any objects. Skipping it ... ")
-                except Exception as err:
-                    print("Error on analysing filepath: [{}]".format(file_path))
-                    print("Error message: [{}]".format(err))
-                    traceback.print_exc()
-                finally:
-                    print("################################")
-
-            REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "Analysis ended")
-        else:
+        if not len(not_yet_analyzed_entities) > 0:
             print("All Digikam imported entities are already analyzed")
-            REDIS_INSTANCE.set(REDIS_ANALYSIS_MESSAGE, "All Digikam imported entities are already analyzed")
+            return 0
+        
+        model = torch.hub.load('ultralytics/yolov5', 'yolov5x', pretrained=True)
+
+        # detect all objects
+        for _ , row in enumerate(not_yet_analyzed_entities):
+
+            row_id = row[0]
+            
+            row_path = row[1]
+            counter = 0
+            for c in row_path:
+                if c == "/":
+                    counter+=1
+                else:
+                    break
+            file_path = os.path.join(INTERNAL_DIGIKAM_ALBUM_FOLDER,row[1][counter:])
+
+            file_hash = row[2]
+
+            try:
+                objects = ObjectDetector.get_objects_in_image(model, file_path)
+
+                # save to internal db
+                id = db.InternalDB.insert_image_objects(row_id, file_hash, objects)
+
+                print("################################")
+                print(f'Inserted [{file_path}] in database!"')
+
+                if not len(objects) > 0:
+                    print("Invalid file or couldn't detect any objects. Skipping it ... ")
+
+                # using 'set' collection because same objects can appear multiple times 
+                # in the same image
+                for obj in set(objects): 
+                    try:
+                        # create digikam tag
+                        tag_id = digikam.DigiKamAdapter.insert_tag(tags_root_pid, obj)
+
+                        # create association
+                        image_tag_id = digikam.DigiKamAdapter.insert_image_tag(row_id, tag_id)
+                    except Exception as e:    
+                        print(f'Error while persisting object [{obj}] for file {file_path}')
+                        traceback.print_exc()
+
+                digikam.DigiKamAdapter.close_db_connection()
+
+                print(f'File path: [{file_path}]')
+                print(f'Objects: [{", ".join(objects)}]')
+                
+            except Exception as e:
+                print(f'Error while analysing filepath: [{file_path}]. Exception: [{e}]')
+                traceback.print_exc()
+            finally:
+                print("################################")
 
         return 0
 
