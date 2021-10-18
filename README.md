@@ -1,5 +1,5 @@
 # Digikam Object Detection "Plugin"
-Gives the ability to search media files inside a DikiKam collection by the objects they contain
+Gives the ability to search media files inside a DigiKam collection by the objects they contain
 
 # How does it work?
 The interface between the DigiKam UI and this Python project is the DigiKam SQLite database, in which this "plugin" inserts the objects detected in the DigiKam collection files.
@@ -10,7 +10,14 @@ Python > 3.8
 
 ## Steps
 1. clone this project
-2. 
+2. cd inside the project
+3. optional: create a virtual environment and activate it
+4. pip install -r requirements.txt
+5. pip install -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt  # install dependencies
+6. cd src
+7. cp .env-sample .env
+8. fill up the .env file with your specific paths
+7. python main.py
 
 # Support
 - images
