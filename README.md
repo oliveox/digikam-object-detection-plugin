@@ -23,10 +23,14 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 # Support
 
 ## Operating Systems
-- Linux (Ubuntu 20.04)
+- Linux (tested on Ubuntu 20.04)
+- Windows (tested on Windows 10)
 
 ## Media files
 - images
+
+## Machine Learning Processing Hardware
+- CPU
 
 # Contribute
 Drop an issue if you have any questions, suggestions or observations. Other not yet implemented cool features I've been thinking about can be found in the TODO file or in code marked with //TODO.
