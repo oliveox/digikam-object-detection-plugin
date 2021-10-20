@@ -2,7 +2,7 @@ import sqlite3
 import traceback
 from sqlite3.dbapi2 import IntegrityError
 
-from config import DIGIKAM_DB_PATH
+from config import DIGIKAM_DB_PATH, SQLITE_MAX_VARIABLE_NUMBER
 
 class DigiKamAdapter:
 
@@ -57,11 +57,27 @@ class DigiKamAdapter:
     @classmethod
     def get_imported_entities_with_specific_ids(cls, ids):
         result = -1
-        try:
-            result = cls.execute_query(cls.get_imported_entities_with_specific_ids_query(len(ids)), ids)
-        except Exception:
-            traceback.print_exc()
-            raise
+        counter = 0
+
+        # query in small batches - sqlite limitation
+        while True:
+            start_index = counter * SQLITE_MAX_VARIABLE_NUMBER
+
+            if (start_index >= len(ids)): break
+
+            end_index = start_index + SQLITE_MAX_VARIABLE_NUMBER
+            batch_ids = ids[start_index:end_index]
+
+            try:
+                batch_result = cls.execute_query(cls.get_imported_entities_with_specific_ids_query(len(batch_ids)), batch_ids)
+            except Exception:
+                traceback.print_exc()
+                raise
+
+            if (result == -1): result = []
+            result.extend(batch_result)
+
+            counter+=1
 
         return result
 
