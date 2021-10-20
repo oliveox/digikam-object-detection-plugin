@@ -5,21 +5,27 @@ Gives the ability to search media files inside a DigiKam collection by the objec
 The interface between the DigiKam UI and this Python project is the DigiKam SQLite database, in which this "plugin" inserts the objects detected in the DigiKam collection files.
 
 # Install
-## Prerequisite
-Python > 3.8
+## Prerequisites
+- Python >= 3.8
+- DigiKam >= 7.1.0
 
 ## Steps
 1. clone this project
-2. cd inside the project
+2. `cd` inside the project
 3. optional: create a virtual environment and activate it
-4. pip install -r requirements.txt
-5. pip install -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt  # install dependencies
-6. cd src
-7. cp .env-sample .env
+4. `pip install -r requirements.txt`
+5. `pip install -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt`
+6. `cd src`
+7. `cp .env-sample .env`
 8. fill up the .env file with your specific paths
-7. python main.py
+7. `python main.py`
 
 # Support
+
+## Operating Systems
+- Linux (Ubuntu 20.04)
+
+## Media files
 - images
 
 # Contribute
