@@ -1,4 +1,5 @@
 ## TODO
+- introduce video support
 - linux / windows support
 - setup script
     - create virtualenv
