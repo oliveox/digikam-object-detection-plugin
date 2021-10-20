@@ -1,12 +1,13 @@
 ## TODO
 - specify yolo version
 - select GPU / CPU processing
+    - readme guide for cuda
 - verify environment variables validity
 - add types to Python code
 - logging to file and console
 - support for multiple Digikam root albums
 - ML efficiency analysis: export somewhere the pics but with border around  detected objects
-- restart Digikam after object analysis
+- restart Digikam after object analysis / DigiKam hot reload
 - create db class models
 
 # Done
