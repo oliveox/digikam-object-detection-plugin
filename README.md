@@ -1,10 +1,11 @@
 # Digikam Object Detection "Plugin"
-Gives the ability to search media files inside a DigiKam collection by the objects they contain
+Gives the ability to search for media files inside a DigiKam collection by the objects they contain
 
 # How does it work?
-The interface between the DigiKam UI and this Python project is the DigiKam SQLite database, in which this "plugin" inserts the objects detected in the DigiKam collection files.
+The interface between the DigiKam UI and this Python project is the DigiKam SQLite database, in which this "plugin" inserts the objects detected in the DigiKam collection files. These objects appear as tags in the DigiKam UI, under the root tag named 'objects'
 
 # Install
+
 ## Prerequisites
 - Python >= 3.8
 - DigiKam >= 7.1.0
@@ -19,6 +20,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 7. `cp .env-example .env`
 8. fill up the .env file with your specific paths
 7. `python main.py`
+8. once the process finishes, open / restart DigiKam and you should have all the detected objects as tags inside the root 'objects' tag
 
 # Support
 

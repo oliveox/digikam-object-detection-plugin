@@ -1,5 +1,7 @@
 ## TODO
 - specify yolo version
+- treat timelapses differently
+    - don't analyse each other shot if they are too similar
 - select GPU / CPU processing
     - readme guide for cuda
 - verify environment variables validity
