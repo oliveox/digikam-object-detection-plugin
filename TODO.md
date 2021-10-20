@@ -1,10 +1,10 @@
 ## TODO
-- introduce video support
-- linux / windows support
 - setup script
     - create virtualenv
     - automatically create plugin.db if it doesn't already exist
     - download and pip install remote yolo requirments file
+- linux / windows support
+- introduce video support
 - specify yolo version
 - select GPU / CPU processing
 - verify environment variables validity

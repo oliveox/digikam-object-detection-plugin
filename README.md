@@ -16,7 +16,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 4. `pip install -r requirements.txt`
 5. `pip install -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt`
 6. `cd src`
-7. `cp .env-sample .env`
+7. `cp .env-example .env`
 8. fill up the .env file with your specific paths
 7. `python main.py`
 

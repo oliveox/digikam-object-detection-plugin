@@ -1,1 +1,2 @@
 filetype
+python-dotenv

@@ -7,4 +7,3 @@ if __name__ == "__main__":
         Utils.analyze_entities()
     except Exception as e:
         print(f'Analysis failed. Exception: {e}')
-        traceback.print_exc()
