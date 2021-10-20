@@ -3,7 +3,7 @@ import traceback
 import torch
 
 from adapters import db, digikam
-from config import INTERNAL_DIGIKAM_ALBUM_FOLDER
+from config import DIGIKAM_ALBUM_FOLDER
 from services.object_detection import ObjectDetector
 
 class Utils:
@@ -48,7 +48,7 @@ class Utils:
                     counter+=1
                 else:
                     break
-            file_path = os.path.join(INTERNAL_DIGIKAM_ALBUM_FOLDER,row[1][counter:])
+            file_path = os.path.join(DIGIKAM_ALBUM_FOLDER,row[1][counter:])
 
             file_hash = row[2]
 
