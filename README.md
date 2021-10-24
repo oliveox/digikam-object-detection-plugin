@@ -28,7 +28,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 - Linux (tested on Ubuntu 20.04)
 - Windows (tested on Windows 10)
 
-## Media files
+## Media files ([specific formats specified here](https://docs.ultralytics.com/quick-start/#from-pytorch-hub))
 - images
 
 ## Machine Learning Processing Hardware
