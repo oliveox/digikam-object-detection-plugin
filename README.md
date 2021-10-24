@@ -22,6 +22,13 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 7. `python main.py`
 8. once the process finishes, open / restart DigiKam and you should have all the detected objects as tags inside the root 'objects' tag
 
+## Configuration
+`.env` file parameters
+- *DIGIKAM_DB_PATH* - digikam SQLite database (`digiKam -> Settings -> Configure digiKam -> Database`)
+- *DIGIKAM_ALBUM_FOLDER* - digiKam collection path (`digiKam -> Settings -> Configure digiKam -> Collections`). Only *Local collections* supported atm.
+- *PLUGIN_DB_PATH* - this plugin SQLite database path
+- *VIDEO_FRAME_STEP* - frame count step while analysing video objects. E.g. if *step = 10* -->  each 10'th frame of the video is taken for object analysis
+
 # Support
 
 ## Operating Systems
@@ -36,7 +43,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 - CPU
 
 # Contribute
-Drop an issue if you have any questions, suggestions or observations. Other not yet implemented cool features I've been thinking about can be found in the TODO file or in code marked with //TODO.
+Drop an issue if you have any questions, suggestions or observations. Other not yet implemented cool features I've been thinking about can be found in the TODO file or in code marked with # TODO.
 
 # Credits
 The object detection core is [YOLOv5](https://github.com/ultralytics/yolov5)
