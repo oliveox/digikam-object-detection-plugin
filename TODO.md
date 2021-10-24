@@ -1,4 +1,5 @@
 ## TODO
+- support specific media collections (can add multiple ones in digikam)
 - specify yolo version
 - treat timelapses differently
     - don't analyse each other shot if they are too similar
@@ -15,3 +16,4 @@
 # Done
 - segment sqlite queries with host parameters nr bigger than the default
 - linux / windows support
+- video files support

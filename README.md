@@ -30,6 +30,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 
 ## Media files ([specific formats specified here](https://docs.ultralytics.com/quick-start/#from-pytorch-hub))
 - images
+- videos
 
 ## Machine Learning Processing Hardware
 - CPU
