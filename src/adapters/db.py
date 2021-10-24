@@ -63,7 +63,7 @@ class InternalDB():
         try:
             cls.execute_query(cls.create_image_objects_table)
         except:
-            traceback.print_exc()
+            # traceback.print_exc()
             raise
 
 

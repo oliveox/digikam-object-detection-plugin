@@ -56,7 +56,7 @@ class DigiKamAdapter:
 
     @classmethod
     def get_imported_entities_with_specific_ids(cls, ids):
-        result = -1
+        result = []
         counter = 0
 
         # query in small batches - sqlite limitation
@@ -74,7 +74,6 @@ class DigiKamAdapter:
                 traceback.print_exc()
                 raise
 
-            if (result == -1): result = []
             result.extend(batch_result)
 
             counter+=1

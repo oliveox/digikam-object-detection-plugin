@@ -53,7 +53,7 @@ class Utils:
             file_hash = row[2]
 
             try:
-                objects = ObjectDetector.get_objects_in_image(model, file_path)
+                objects = ObjectDetector.get_objects_in_file(model, file_path)
 
                 # save to internal db
                 id = db.InternalDB.insert_image_objects(row_id, file_hash, objects)
@@ -79,12 +79,11 @@ class Utils:
 
                 digikam.DigiKamAdapter.close_db_connection()
 
-                print(f'File path: [{file_path}]')
                 print(f'Objects: [{", ".join(objects)}]')
                 
             except Exception as e:
                 print(f'Error while analysing filepath: [{file_path}]. Exception: [{e}]')
-                traceback.print_exc()
+                # traceback.print_exc()
             finally:
                 print("################################")
 
