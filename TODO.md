@@ -12,6 +12,7 @@
 - ML efficiency analysis: export somewhere the pics but with border around  detected objects
 - restart Digikam after object analysis / DigiKam hot reload
 - create db class models
+- custom UI for videos (skip to specific contained objects)
 
 # Done
 - segment sqlite queries with host parameters nr bigger than the default

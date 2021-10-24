@@ -27,7 +27,7 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 - *DIGIKAM_DB_PATH* - digikam SQLite database (`digiKam -> Settings -> Configure digiKam -> Database`)
 - *DIGIKAM_ALBUM_FOLDER* - digiKam collection path (`digiKam -> Settings -> Configure digiKam -> Collections`). Only *Local collections* supported atm.
 - *PLUGIN_DB_PATH* - this plugin SQLite database path
-- *VIDEO_FRAME_STEP* - frame count step while analysing video objects. E.g. if *step = 10* -->  each 10'th frame of the video is taken for object analysis
+- *VIDEO_FRAME_STEP* - frame count step while analysing video files. E.g. if *step = 10* -->  each 10'th frame of the video is taken for object analysis
 
 # Support
 
