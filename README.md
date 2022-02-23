@@ -26,10 +26,12 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 `.env` file parameters
 - *DIGIKAM_DB_PATH* - digikam SQLite database (`digiKam -> Settings -> Configure digiKam -> Database`)
 - *DIGIKAM_ALBUM_FOLDER* - digiKam collection path (`digiKam -> Settings -> Configure digiKam -> Collections`). Only *Local collections* supported atm.
-- *PLUGIN_DB_PATH* - this plugin SQLite database path
-- *VIDEO_FRAME_STEP* - frame count step while analysing video files. E.g. if *step = 10* -->  each 10'th frame of the video is taken for object analysis
+- *PLUGIN_DB_PATH* - this plugin SQLite database path (as it needs one a.t.m)
+- *VIDEO_FRAME_STEP* - frame count step while analysing video files. E.g. if *step = 10* -->  each 10'th frame (a.k.a image) of the video is taken for object analysis
 
 # Support
+
+Even if this project doesn't have any unit / integration / etc. tests, I'm gonna resume and concentrate the supported features, based on the scenarios I've met. Feel free to contribute if you believe in this project.
 
 ## Operating Systems
 - Linux (tested on Ubuntu 20.04)
@@ -43,7 +45,8 @@ The interface between the DigiKam UI and this Python project is the DigiKam SQLi
 - CPU
 
 # Contribute
-Drop an issue if you have any questions, suggestions or observations. Other not yet implemented cool features I've been thinking about can be found in the TODO file or in code marked with # TODO.
+Drop an issue if you have any questions, suggestions or observations. Other to be implemented features I've been thinking about can be found in the TODO file or in the codebase, marked with # TODO, but I'm open to ideas.
 
 # Credits
+DigiKam - media manager: https://www.digikam.org/
 The object detection core is [YOLOv5](https://github.com/ultralytics/yolov5)
